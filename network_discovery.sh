@@ -1,21 +1,21 @@
 #!/bin/bash
 
-# Verify if parameters were passed
+# Verifica se os parâmetros foram passados
 if [ -z "$1" ]; then
-    echo "Usage: $0 <network> [timeout]"
+    echo "Uso: $0 <rede> [timeout]"
     exit 1
 fi
 
-network=$1
-timeout=${2:-1}  # If timeout is not provided, use the default value of 1 second
+rede=$1
+timeout=${2:-1}  # Se o timeout não for fornecido, usa o valor padrão de 1 segundo
 
 for ip in {1..254}; do
     (
-        ping -c 1 -W $timeout $network.$ip > /dev/null 2>&1
+        ping -c 1 -W $timeout $rede.$ip > /dev/null 2>&1
         if [ $? -eq 0 ]; then
-            echo "$network.$ip"
+            echo "$rede.$ip open"
         fi
     ) &
 done
 
-wait  # Wait for all parallel processes to finish
+wait  # Aguarda todos os processos paralelos terminarem
