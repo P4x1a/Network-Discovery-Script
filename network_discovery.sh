@@ -25,7 +25,10 @@ for ip in {1..254}; do
         ping -c 1 -W $timeout $rede.$ip > /dev/null 2>&1
         if [ $? -eq 0 ]; then
             ip_address="$rede.$ip"
-            location=$(curl -s "http://ipinfo.io/$ip_address/geo" | jq -r '.city, .region, .country')
+            location=$(curl -s "http://ipinfo.io/$ip_address/geo" | jq -r '.city, .region, .country | select(. != null)' | paste -sd ", " -)
+            if [ -z "$location" ]; then
+                location="Location unavailable"
+            fi
             echo "$ip_address open - $location"
         fi
     ) &
